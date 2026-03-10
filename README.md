@@ -104,12 +104,42 @@ Jasoseol-tracking/
 
 ---
 
-## 🚀 공고 추가 방법
+## 🚀 사용 방법
 
-GitHub → Settings → Secrets → `TRACK_URLS` 업데이트
+### 1. Notion 설정
+
+1. [Notion Integrations](https://www.notion.so/my-integrations)에서 새 Integration 생성
+2. Integration 토큰(`NOTION_API_KEY`) 복사
+3. Notion에서 공고 트래커용 DB 생성 후 DB ID(`NOTION_DB_ID`) 복사
+   - DB URL: `https://notion.so/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` → 뒤의 32자리가 DB ID
+4. DB 페이지 우상단 **⋯ → Connections → 생성한 Integration 연결**
+
+### 2. GitHub Secrets 등록
+
+레포 **Settings → Secrets and variables → Actions → New repository secret**
+
+| Secret 이름 | 값 |
+|------------|-----|
+| `NOTION_API_KEY` | Notion Integration 토큰 |
+| `NOTION_DB_ID` | Notion DB ID |
+| `TRACK_URLS` | 추적할 공고 URL 목록 (JSON 배열, 한 줄로 입력) |
 
 ```json
 ["https://jasoseol.com/recruit/102910", "https://jasoseol.com/recruit/123456"]
 ```
 
-> ⚠️ 반드시 한 줄로 입력해야 합니다. 새 공고 추가 시 기존 URL도 포함해서 저장하세요.
+> ⚠️ 반드시 한 줄로 입력해야 합니다.
+
+### 3. 공고 추가 방법
+
+`TRACK_URLS` Secret을 업데이트할 때 **기존 URL + 새 URL**을 합쳐서 저장합니다.
+
+```json
+["https://jasoseol.com/recruit/기존URL1", "https://jasoseol.com/recruit/기존URL2", "https://jasoseol.com/recruit/새URL"]
+```
+
+> ⚠️ 기존 URL을 빠뜨리면 해당 공고는 더 이상 업데이트되지 않습니다.
+
+### 4. 수동 실행
+
+GitHub **Actions 탭 → 자소설닷컴 공고 트래커 → Run workflow**
