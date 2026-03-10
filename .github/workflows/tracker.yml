@@ -1,0 +1,30 @@
+name: 자소설닷컴 공고 트래커
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # 매시간 자동 실행
+  workflow_dispatch:       # 수동 실행 허용
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성 설치
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: 트래커 실행
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DB_ID:   ${{ secrets.NOTION_DB_ID }}
+          TRACK_URLS:     ${{ secrets.TRACK_URLS }}
+        run: python scripts/tracker.py
